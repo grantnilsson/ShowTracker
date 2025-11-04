@@ -1,4 +1,3 @@
-const TMDB_BASE_URL = 'https://api.themoviedb.org/3'
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p'
 
 export interface TMDBSearchResult {
@@ -60,27 +59,16 @@ export interface TMDBDetailedTV {
 }
 
 class TMDBApi {
-  private getApiKey(): string {
-    // Try server-side env variable first, then client-side
-    const apiKey = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY
-    if (!apiKey) {
-      throw new Error('TMDB API key not configured. Set TMDB_API_KEY or NEXT_PUBLIC_TMDB_API_KEY environment variable.')
-    }
-    console.log('Using TMDB API Key:', apiKey ? 'configured' : 'not configured')
-    return apiKey
-  }
-
   private async fetchFromTMDB(endpoint: string, params: Record<string, string> = {}) {
-    const apiKey = this.getApiKey()
-
+    // Use our API proxy instead of calling TMDB directly
     const queryParams = new URLSearchParams({
-      api_key: apiKey,
+      endpoint,
       ...params
     })
 
-    const url = `${TMDB_BASE_URL}${endpoint}?${queryParams}`
-    console.log('TMDB API Request:', url)
-    
+    const url = `/api/tmdb?${queryParams}`
+    console.log('TMDB Proxy Request:', endpoint)
+
     const response = await fetch(url)
     
     if (!response.ok) {
