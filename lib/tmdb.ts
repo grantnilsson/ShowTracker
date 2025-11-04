@@ -60,19 +60,19 @@ export interface TMDBDetailedTV {
 }
 
 class TMDBApi {
-  private apiKey: string | undefined
-
-  constructor() {
-    this.apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY
+  private getApiKey(): string {
+    const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY
+    if (!apiKey) {
+      throw new Error('TMDB API key not configured')
+    }
+    return apiKey
   }
 
   private async fetchFromTMDB(endpoint: string, params: Record<string, string> = {}) {
-    if (!this.apiKey) {
-      throw new Error('TMDB API key not configured')
-    }
+    const apiKey = this.getApiKey()
 
     const queryParams = new URLSearchParams({
-      api_key: this.apiKey,
+      api_key: apiKey,
       ...params
     })
 
