@@ -61,10 +61,12 @@ export interface TMDBDetailedTV {
 
 class TMDBApi {
   private getApiKey(): string {
-    const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY
+    // Try server-side env variable first, then client-side
+    const apiKey = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY
     if (!apiKey) {
-      throw new Error('TMDB API key not configured')
+      throw new Error('TMDB API key not configured. Set TMDB_API_KEY or NEXT_PUBLIC_TMDB_API_KEY environment variable.')
     }
+    console.log('Using TMDB API Key:', apiKey ? 'configured' : 'not configured')
     return apiKey
   }
 
