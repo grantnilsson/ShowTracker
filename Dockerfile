@@ -22,6 +22,9 @@ COPY --from=deps /app/prisma ./prisma
 # Copy application source
 COPY . .
 
+# Create public directory if it doesn't exist
+RUN mkdir -p public
+
 # Build the application (prisma generate is in the build script)
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
@@ -38,9 +41,9 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copy necessary files
-COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
