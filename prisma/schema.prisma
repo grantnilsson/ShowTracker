@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Show {
+  id                   String    @id @default(uuid())
+  name                 String
+  description          String
+  rottenTomatoesRating Int?
+  releaseYear          Int
+  myRating             Int?
+  type                 String    // 'movie' | 'documentary' | 'tv_series'
+  numberOfSeasons      Int?
+  completedSeasons     String?   // JSON array of completed season numbers
+  trailerLink          String?
+  posterUrl            String?
+  watchStatus          String    // 'want_to_watch' | 'watching' | 'watching_on_hold' | 'completed'
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  
+  // Relations
+  comments             Comment[]
+  progress             Progress?
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  showId    String
+  show      Show     @relation(fields: [showId], references: [id], onDelete: Cascade)
+}
+
+model Progress {
+  id          String  @id @default(uuid())
+  season      Int?
+  episode     Int?
+  timeWatched String?
+  showId      String  @unique
+  show        Show    @relation(fields: [showId], references: [id], onDelete: Cascade)
+}
