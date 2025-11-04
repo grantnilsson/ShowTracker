@@ -1,10 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { Film, Tv, Home, Plus, Search } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Film, Tv, Home, Plus, Search, LogOut } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -15,6 +16,13 @@ const navItems = [
 
 export function Navigation() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    document.cookie = "auth=; path=/; max-age=0"
+    router.push("/login")
+    router.refresh()
+  }
 
   return (
     <nav className="border-b">
@@ -47,8 +55,19 @@ export function Navigation() {
               })}
             </div>
           </div>
-          
-          <ThemeToggle />
+
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center space-x-2"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </Button>
+          </div>
         </div>
       </div>
     </nav>
