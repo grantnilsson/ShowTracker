@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
 
-let prisma: any
+let prisma: PrismaClient | null = null
 try {
   const { prisma: prismaClient } = require('@/lib/prisma')
   prisma = prismaClient
@@ -30,7 +31,7 @@ export async function GET() {
     })
     
     // Transform the data to match our frontend format
-    const transformedShows = shows.map(show => ({
+    const transformedShows = shows.map((show: any) => ({
       ...show,
       completedSeasons: show.completedSeasons ? JSON.parse(show.completedSeasons) : [],
       currentProgress: show.progress ? {

@@ -17,16 +17,26 @@ import Link from "next/link"
 export default function NewShowPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string
+    description: string
+    rottenTomatoesRating: string
+    releaseYear: string
+    myRating: string
+    type: ShowType
+    numberOfSeasons: string
+    trailerLink: string
+    watchStatus: 'want_to_watch' | 'watching' | 'watching_on_hold' | 'completed'
+  }>({
     name: "",
     description: "",
     rottenTomatoesRating: "",
     releaseYear: new Date().getFullYear().toString(),
     myRating: "",
-    type: "movie" as ShowType,
+    type: "movie",
     numberOfSeasons: "",
     trailerLink: "",
-    watchStatus: "want_to_watch" as const
+    watchStatus: "want_to_watch"
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +44,7 @@ export default function NewShowPage() {
     setIsSubmitting(true)
 
     try {
-      const newShow = storage.addShow({
+      const newShow = await storage.addShow({
         name: formData.name,
         description: formData.description,
         rottenTomatoesRating: formData.rottenTomatoesRating ? Number(formData.rottenTomatoesRating) : undefined,
@@ -185,7 +195,7 @@ export default function NewShowPage() {
                 <Label htmlFor="watchStatus">Watch Status *</Label>
                 <Select
                   value={formData.watchStatus}
-                  onValueChange={(value) => setFormData({ ...formData, watchStatus: value as "want_to_watch" | "watching" | "completed" })}
+                  onValueChange={(value) => setFormData({ ...formData, watchStatus: value as "want_to_watch" | "watching" | "watching_on_hold" | "completed" })}
                 >
                   <SelectTrigger id="watchStatus">
                     <SelectValue />
@@ -193,6 +203,7 @@ export default function NewShowPage() {
                   <SelectContent>
                     <SelectItem value="want_to_watch">Want to Watch</SelectItem>
                     <SelectItem value="watching">Watching</SelectItem>
+                    <SelectItem value="watching_on_hold">On Hold</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                   </SelectContent>
                 </Select>

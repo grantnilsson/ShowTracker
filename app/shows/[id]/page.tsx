@@ -58,8 +58,8 @@ export default function ShowDetailPage({ params }: { params: Promise<{ id: strin
 
   const handleWatchStatusChange = async (newStatus: string) => {
     if (!show) return
-    
-    const updated = await storage.updateShow(id, { watchStatus: newStatus })
+
+    const updated = await storage.updateShow(id, { watchStatus: newStatus as 'want_to_watch' | 'watching' | 'watching_on_hold' | 'completed' })
     if (updated) {
       setShow(updated)
     }

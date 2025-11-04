@@ -152,7 +152,7 @@ export default function SearchPage() {
         numberOfSeasons,
         watchStatus: "want_to_watch",
         comments: [],
-        posterUrl: result.poster_path ? tmdbApi.getImageUrl(result.poster_path, 'w500') : undefined
+        posterUrl: result.poster_path ? tmdbApi.getImageUrl(result.poster_path, 'w500') || undefined : undefined
       })
 
       router.push(`/shows/${newShow.id}/edit`)
@@ -525,7 +525,7 @@ export default function SearchPage() {
                       {'title' in previewDetails ? previewDetails.title : previewDetails.name}
                     </DialogTitle>
                     <DialogDescription>
-                      {previewDetails.tagline || `${previewShow.media_type === 'movie' ? 'Movie' : 'TV Show'} Details`}
+                      {('tagline' in previewDetails ? previewDetails.tagline : null) || `${previewShow.media_type === 'movie' ? 'Movie' : 'TV Show'} Details`}
                     </DialogDescription>
                   </DialogHeader>
 
@@ -534,7 +534,7 @@ export default function SearchPage() {
                     <div className="md:col-span-1">
                       {previewDetails.poster_path && (
                         <img
-                          src={tmdbApi.getImageUrl(previewDetails.poster_path, 'w500')}
+                          src={tmdbApi.getImageUrl(previewDetails.poster_path, 'w500') || ''}
                           alt={'title' in previewDetails ? previewDetails.title : previewDetails.name}
                           className="w-full rounded-lg shadow-lg"
                         />

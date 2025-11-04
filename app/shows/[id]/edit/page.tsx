@@ -19,17 +19,28 @@ export default function EditShowPage({ params }: { params: Promise<{ id: string 
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [show, setShow] = useState<Show | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string
+    description: string
+    rottenTomatoesRating: string
+    releaseYear: string
+    myRating: string
+    type: ShowType
+    numberOfSeasons: string
+    trailerLink: string
+    posterUrl: string
+    watchStatus: 'want_to_watch' | 'watching' | 'watching_on_hold' | 'completed'
+  }>({
     name: "",
     description: "",
     rottenTomatoesRating: "",
     releaseYear: "",
     myRating: "",
-    type: "movie" as ShowType,
+    type: "movie",
     numberOfSeasons: "",
     trailerLink: "",
     posterUrl: "",
-    watchStatus: "want_to_watch" as const
+    watchStatus: "want_to_watch"
   })
 
   useEffect(() => {
@@ -64,7 +75,7 @@ export default function EditShowPage({ params }: { params: Promise<{ id: string 
     setIsSubmitting(true)
 
     try {
-      const updatedShow = storage.updateShow(id, {
+      const updatedShow = await storage.updateShow(id, {
         name: formData.name,
         description: formData.description,
         rottenTomatoesRating: formData.rottenTomatoesRating ? Number(formData.rottenTomatoesRating) : undefined,
